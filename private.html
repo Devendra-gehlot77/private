@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Surprise for You 💖</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <style>
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-size: cover;
+      background-position: center;
+      z-index: -1;
+      animation: bg-slide 30s infinite alternate;
+    }
+    @keyframes bg-slide {
+      0% { background-image: url('https://source.unsplash.com/800x600/?love'); }
+      25% { background-image: url('https://source.unsplash.com/800x600/?romantic,couple'); }
+      50% { background-image: url('https://source.unsplash.com/800x600/?hug,love'); }
+      75% { background-image: url('https://source.unsplash.com/800x600/?flowers,heart'); }
+      100% { background-image: url('https://source.unsplash.com/800x600/?candle,romance'); }
+    }
+
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in-up { animation: fadeInUp 1s ease-out forwards; }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    .typewriter {
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 3px solid #e91e63;
+      width: 0;
+      animation: typing 3s steps(30, end) forwards;
+      font-size: 2rem;
+      color: #e91e63;
+    }
+
+    .heart { animation: pulse 1.5s infinite; }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+    }
+
+    #mainContent { display: none; }
+
+    @media (max-width: 640px) {
+      .typewriter { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen text-center p-4">
+
+  <div id="welcomeText" class="typewriter mb-8">Welcome my love ❤️</div>
+
+  <div id="mainContent" class="bg-white bg-opacity-90 rounded-3xl shadow-xl w-full max-w-md p-6 text-center fade-in-up">
+    <div class="text-4xl heart mb-4">❤️</div>
+    <h1 class="text-2xl font-bold text-pink-600 mb-2">Hey My Wifey!</h1>
+    <p id="typewriter" class="text-gray-600 mb-4 h-16 leading-relaxed"></p>
+
+    <div class="flex flex-col gap-3 text-sm">
+      <button onclick="showModal('memories')" class="bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-full transition">See Memories</button>
+      <button onclick="showModal('reasons')" class="bg-pink-400 hover:bg-pink-500 text-white py-2 rounded-full transition">Why I Love You</button>
+      <button onclick="showModal('photo ')" class="bg-pink-300 hover:bg-pink-400 text-white py-2 rounded-full transition">A Cute Pic</button>
+      <button onclick="showModal('letter')" class="bg-pink-200 hover:bg-pink-300 text-white py-2 rounded-full transition">A Letter for You</button>
+      <button onclick="showModal('album')" class="bg-pink-100 hover:bg-pink-200 text-pink-700 border border-pink-300 py-2 rounded-full transition">📸 Our Album</button>
+    </div>
+
+    <button onclick="toggleMusic()" class="mt-4 text-sm text-pink-500 underline">Play/Pause Music 🎵</button>
+    <audio id="bgMusic" loop>
+      <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+  </div>
+
+  <div id="modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden z-50 px-4">
+    <div id="modalBox" class="bg-white rounded-xl w-full max-w-md p-5 text-center relative transform scale-90 transition-all duration-500 overflow-y-auto max-h-[90vh] fade-in-up">
+      <button onclick="closeModal()" class="absolute top-2 right-3 text-gray-500 text-xl">×</button>
+      <div id="modalContent" class="text-sm leading-relaxed space-y-3"></div>
+    </div>
+  </div>
+
+  <script>
+    const msg = "You are the most beautiful part of my life ❤️";
+    let i = 0;
+    function typeWriter() {
+      if (i < msg.length) {
+        document.getElementById("typewriter").innerHTML += msg.charAt(i);
+        i++;
+        setTimeout(typeWriter, 70);
+      }
+    }
+
+    window.onload = () => {
+      setTimeout(() => {
+        document.getElementById("mainContent").style.display = "block";
+        typeWriter();
+      }, 3300);
+    };
+
+    function toggleMusic() {
+      const music = document.getElementById("bgMusic");
+      music.paused ? music.play() : music.pause();
+    }
+
+    function showModal(type) {
+      const modal = document.getElementById("modal");
+      const content = document.getElementById("modalContent");
+      const modalBox = document.getElementById("modalBox");
+      modal.classList.remove("hidden");
+      modalBox.classList.remove("scale-90");
+      modalBox.classList.add("scale-100");
+      confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+
+      if (type === "memories") {
+        content.innerHTML = `
+          <h2 class='text-xl font-bold text-pink-600'>Our Sweet Memories</h2>
+          <p class='text-gray-600'>Our First Hand Holding & Meetup ❤️</p>
+          <img src='../images/myday.jpg' class='rounded-lg mx-auto mt-2' />
+        `;
+      } else if (type === "reasons") {
+        content.innerHTML = `
+          <h2 class='text-xl font-bold text-pink-600'>Why I Love You</h2>
+          <ul class='text-left text-gray-700 list-disc px-5'>
+            <li>Tere bina sab kuch adhura lagta hai</li>
+            <li>You are not my gf, you are my wife 🥹</li>
+            <li>Tu dikhti hai toh sukoon milta hai</li>
+            <li>You complete me 💕</li>
+            <li class='text-center'> Mera laptop kam padh jayega agar likhane bethu tumhare bare mian </li> 
+          </ul>
+        `;
+      } else if (type === "photo") {
+        content.innerHTML = `
+          <h2 class='text-xl font-bold text-pink-600 mb-2'>Just Looking WOWWWW  😍</h2>
+          <img src='../images/firstmeet.jpg' class='rounded-xl mx-auto' />
+        `;
+      } else if (type === "letter") {
+        content.innerHTML = `
+          <h2 class='text-xl font-bold text-pink-600 mb-2'>A Small Letter ✉️</h2>
+          <p class='text-gray-700'>
+            Dear Love,<br/>
+            I just wanted to say thank you for being in my life. You make every moment so special. I promise to always be there for you. Love you forever 💖
+          </p>
+        `;
+      } else if (type === "album") {
+        content.innerHTML = `
+          <h2 class='text-xl font-bold text-pink-600 mb-2'>Our Moments</h2>
+          <div class="w-full overflow-hidden rounded-xl">
+            <div id="sliderTrack" class="flex transition-transform duration-700 ease-in-out">
+              <img src="../images/album1.jpg" class="w-full rounded-xl flex-shrink-0" />
+              <img src="../images/album2.jpg" class="w-full rounded-xl flex-shrink-0" />
+              <img src="../images/album3.jpg" class="w-full rounded-xl flex-shrink-0" />
+              <img src="../images/album4.jpg" class="w-full rounded-xl flex-shrink-0" />
+              <img src="../images/album5.jpg" class="w-full rounded-xl flex-shrink-0" />
+            </div>
+          </div>
+        `;
+        setTimeout(() => startAlbumSlider(), 100);
+      }
+    }
+
+    function closeModal() {
+      document.getElementById("modal").classList.add("hidden");
+    }
+
+    function startAlbumSlider() {
+      const track = document.getElementById("sliderTrack");
+      const images = track.querySelectorAll("img");
+      let current = 0;
+      setInterval(() => {
+        current = (current + 1) % images.length;
+        const offset = -current * track.offsetWidth;
+        track.style.transform = `translateX(${offset}px)`;
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
