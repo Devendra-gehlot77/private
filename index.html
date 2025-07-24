@@ -53,6 +53,30 @@
 
     #mainContent { display: none; }
 
+    .slider-container {
+      position: relative;
+      width: 100%;
+      max-width: 300px;
+      height: 300px;
+      margin: auto;
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .slider-container img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+      border-radius: 9999px;
+    }
+
+    .slider-container img.active {
+      opacity: 1;
+    }
+
     @media (max-width: 640px) {
       .typewriter { font-size: 1.3rem; }
     }
@@ -60,8 +84,10 @@
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen text-center p-4">
 
+  <!-- Welcome Text -->
   <div id="welcomeText" class="typewriter mb-8">Welcome my love ❤️</div>
 
+  <!-- Main Content -->
   <div id="mainContent" class="bg-white bg-opacity-90 rounded-3xl shadow-xl w-full max-w-md p-6 text-center fade-in-up">
     <div class="text-4xl heart mb-4">❤️</div>
     <h1 class="text-2xl font-bold text-pink-600 mb-2">Hey My Wifey!</h1>
@@ -70,7 +96,7 @@
     <div class="flex flex-col gap-3 text-sm">
       <button onclick="showModal('memories')" class="bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-full transition">See Memories</button>
       <button onclick="showModal('reasons')" class="bg-pink-400 hover:bg-pink-500 text-white py-2 rounded-full transition">Why I Love You</button>
-      <button onclick="showModal('photo ')" class="bg-pink-300 hover:bg-pink-400 text-white py-2 rounded-full transition">A Cute Pic</button>
+      <button onclick="showModal('photo')" class="bg-pink-300 hover:bg-pink-400 text-white py-2 rounded-full transition">A Cute Pic</button>
       <button onclick="showModal('letter')" class="bg-pink-200 hover:bg-pink-300 text-white py-2 rounded-full transition">A Letter for You</button>
       <button onclick="showModal('album')" class="bg-pink-100 hover:bg-pink-200 text-pink-700 border border-pink-300 py-2 rounded-full transition">📸 Our Album</button>
     </div>
@@ -81,6 +107,7 @@
     </audio>
   </div>
 
+  <!-- Modal -->
   <div id="modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden z-50 px-4">
     <div id="modalBox" class="bg-white rounded-xl w-full max-w-md p-5 text-center relative transform scale-90 transition-all duration-500 overflow-y-auto max-h-[90vh] fade-in-up">
       <button onclick="closeModal()" class="absolute top-2 right-3 text-gray-500 text-xl">×</button>
@@ -134,36 +161,40 @@
             <li>You are not my gf, you are my wife 🥹</li>
             <li>Tu dikhti hai toh sukoon milta hai</li>
             <li>You complete me 💕</li>
-            <li class='text-center'> Mera laptop kam padh jayega agar likhane bethu tumhare bare mian </li> 
+            <li>Tujhse baat karna hi kaafi hota hai</li>
           </ul>
         `;
       } else if (type === "photo") {
         content.innerHTML = `
-          <h2 class='text-xl font-bold text-pink-600 mb-2'>Just Looking WOWWWW  😍</h2>
-          <img src='../images/firstmeet.jpg' class='rounded-xl mx-auto' />
+          <h2 class='text-xl font-bold text-pink-600'>My Favorite Pic With My Person</h2>
+          <img src='../images/firstmeet.jpg' class='rounded-full mx-auto mt-4' />
         `;
       } else if (type === "letter") {
         content.innerHTML = `
-          <h2 class='text-xl font-bold text-pink-600 mb-2'>A Small Letter ✉️</h2>
-          <p class='text-gray-700'>
-            Dear Love,<br/>
-            I just wanted to say thank you for being in my life. You make every moment so special. I promise to always be there for you. Love you forever 💖
+          <h2 class='text-xl font-bold text-pink-600'>A Letter For You</h2>
+          <p class='text-left text-gray-700 whitespace-pre-line'>
+            My dearest love,
+
+            Every second with you is like a beautiful dream.
+            You are my strength, my happiness, my heart.
+
+            Thank you for existing.
+
+            Yours forever ❤️
           </p>
         `;
       } else if (type === "album") {
         content.innerHTML = `
           <h2 class='text-xl font-bold text-pink-600 mb-2'>Our Moments</h2>
-          <div class="w-full overflow-hidden rounded-xl">
-            <div id="sliderTrack" class="flex transition-transform duration-700 ease-in-out">
-              <img src="../images/album1.jpg" class="w-full rounded-xl flex-shrink-0" />
-              <img src="../images/album2.jpg" class="w-full rounded-xl flex-shrink-0" />
-              <img src="../images/album3.jpg" class="w-full rounded-xl flex-shrink-0" />
-              <img src="../images/album4.jpg" class="w-full rounded-xl flex-shrink-0" />
-              <img src="../images/album5.jpg" class="w-full rounded-xl flex-shrink-0" />
-            </div>
+          <div class="slider-container">
+            <img class="slider-img active" src="../images/album1.jpg" />
+            <img class="slider-img" src="../images/album2.jpg" />
+            <img class="slider-img" src="../images/album3.jpg" />
+            <img class="slider-img" src="../images/album4.jpg" />
+            <img class="slider-img" src="../images/album5.jpg" />
           </div>
         `;
-        setTimeout(() => startAlbumSlider(), 100);
+        setTimeout(() => startAlbumSlider(), 100); // start slider after images loaded
       }
     }
 
@@ -172,13 +203,12 @@
     }
 
     function startAlbumSlider() {
-      const track = document.getElementById("sliderTrack");
-      const images = track.querySelectorAll("img");
+      const images = document.querySelectorAll(".slider-img");
       let current = 0;
       setInterval(() => {
+        images[current].classList.remove("active");
         current = (current + 1) % images.length;
-        const offset = -current * track.offsetWidth;
-        track.style.transform = `translateX(${offset}px)`;
+        images[current].classList.add("active");
       }, 3000);
     }
   </script>
